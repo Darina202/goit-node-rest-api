@@ -37,7 +37,7 @@ export const deleteContact = async (req, res, next) => {
 export const createContact = async (req, res, next) => {
   const { name, email, phone } = req.body;
   try {
-    const result = await contactsService.addContact(name, email, phone);
+    const result = await contactsService.addContact(req.body);
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -51,6 +51,19 @@ export const updateContact = async (req, res, next) => {
       throw HttpError(400, 'Body must have at least one field');
     }
     const result = await contactsService.updateContact(params.id, body);
+    if (!result) {
+      throw HttpError(404);
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateStatusContact = async (req, res, next) => {
+  const { params, body } = req;
+  try {
+    const result = await contactsService.updateStatusContact(params.id, body);
     if (!result) {
       throw HttpError(404);
     }
