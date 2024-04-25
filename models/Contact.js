@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { handleSaveError, setUpdateSetting } from './hooks.js';
 
 const contactSchema = new Schema(
   {
@@ -16,25 +17,19 @@ const contactSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+    },
   },
   { versionKey: false, timestamps: true }
 );
 
-contactSchema.post('save', (req, res, next) => {
-  error.status = 400;
-  next();
-});
+contactSchema.post('save', handleSaveError);
 
-contactSchema.pre('findOneAndUpdate', function (next) {
-  this.options.new = true;
-  this.options.runValidators = true;
-  next();
-});
+contactSchema.pre('findOneAndUpdate', setUpdateSetting);
 
-contactSchema.post('findOneAndUpdate', (req, res, next) => {
-  error.status = 400;
-  next();
-});
+contactSchema.post('findOneAndUpdate', handleSaveError);
 
 const Contact = model('contact', contactSchema);
 
