@@ -17,8 +17,7 @@ export const singup = async (req, res, next) => {
     const newUser = await singUp({ ...req.body, password: hashPassword });
 
     res.status(201).json({
-      email: newUser.email,
-      subscription: newUser.subscription,
+      user: { email: newUser.email, subscription: newUser.subscription },
     });
     next();
   } catch (error) {
@@ -63,7 +62,4 @@ export const logout = async (req, res) => {
   const { _id } = req.user;
   await updateUser({ _id }, { token: '' });
   res.status(204).send();
-  // res.json({
-  //   message: 'Signout success',
-  // });
 };
