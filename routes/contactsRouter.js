@@ -13,8 +13,9 @@ import {
   updateFavoriteSchema,
 } from '../schemas/contactsSchemas.js';
 import validateBody from '../helpers/validateBody.js';
-import validId from '../helpers/validId.js';
-import validateAuth from '../helpers/validateAuth.js';
+import validId from '../middlewares/validId.js';
+import validateAuth from '../middlewares/validateAuth.js';
+import upload from '../middlewares/upload.js';
 
 const contactsRouter = express.Router();
 
@@ -26,7 +27,12 @@ contactsRouter.get('/:id', validId, getOneContact);
 
 contactsRouter.delete('/:id', validId, deleteContact);
 
-contactsRouter.post('/', validateBody(createContactSchema), createContact);
+contactsRouter.post(
+  '/',
+  upload.single('avatar'),
+  validateBody(createContactSchema),
+  createContact
+);
 
 contactsRouter.put(
   '/:id',

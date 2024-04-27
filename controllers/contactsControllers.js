@@ -1,5 +1,9 @@
 import * as contactsService from '../services/contactsServices.js';
 import HttpError from '../helpers/HttpError.js';
+import path from 'path';
+import fs from 'fs/promises';
+
+const avatarPath = path.resolve('public', 'avatars');
 
 export const getAllContacts = async (req, res, next) => {
   const { _id: owner } = req.user;
@@ -34,6 +38,10 @@ export const getOneContact = async (req, res, next) => {
 
 export const createContact = async (req, res, next) => {
   const { _id: owner } = req.user;
+  const { path: oldPath, filename } = req.file;
+  const newPath = path.join(avatarPath, filename);
+  console.log(newPath);
+  await fs.rename(oldPath, newPath);
   try {
     const result = await contactsService.addContact({ ...req.body, owner });
     res.status(201).json(result);
