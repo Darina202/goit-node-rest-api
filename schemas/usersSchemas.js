@@ -16,3 +16,9 @@ export const userSignInSchema = Joi.object({
     minDomainSegments: 2,
   }),
 });
+
+export const userEmailSchema = Joi.object({
+  email: Joi.string().min(1).required().email({
+    minDomainSegments: 2,
+  }),
+});
